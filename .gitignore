@@ -1,0 +1,14 @@
+node_modules
+pnpm-lock.yaml
+yarn.lock
+.DS_Store
+server/dist
+server/.env
+client/.env
+*.log
+uploads/*
+!uploads/.gitkeep
+data/*
+!data/.gitkeep
+templates/*
+!templates/.gitkeep
