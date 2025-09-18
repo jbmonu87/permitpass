@@ -4,6 +4,7 @@ import type { NextFunction, Request, Response } from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import { healthRouter } from "./routes/health.js";
+import { checklistRouter } from "./routes/checklist.js";
 import { appEnv } from "./config/env.js";
 import { db } from "./db/client.js";
 import { initializeSchema } from "./db/schema.js";
@@ -25,6 +26,7 @@ export const createApp = () => {
   app.use(morgan(appEnv.nodeEnv === "development" ? "dev" : "combined"));
 
   app.use("/api/health", healthRouter);
+  app.use("/api/checklist", checklistRouter);
 
   app.get("/api/admin/dump", (_req, res) => {
     res.json({
