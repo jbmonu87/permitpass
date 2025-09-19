@@ -25,6 +25,17 @@ The server reads environment variables from `.env` if present. By default it sto
 | `npm run typecheck` | Type-check server and client |
 | `npm run build` | Build the server and client bundles |
 
+### Uploading documents
+
+The `/api/upload` endpoint accepts multipart form data with the fields `projectId`, `doc_type_key`, and `file`.
+
+```bash
+curl -X POST http://localhost:4000/api/upload \
+  -F projectId=example-project \
+  -F doc_type_key=structural_plan \
+  -F file=@/path/to/file.pdf
+```
+
 ### Project layout
 
 ```
