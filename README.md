@@ -36,6 +36,20 @@ curl -X POST http://localhost:4000/api/upload \
   -F file=@/path/to/file.pdf
 ```
 
+### Managing projects
+
+The `/api/projects` endpoints allow you to create and list stored projects.
+
+```bash
+curl -X POST http://localhost:4000/api/projects \
+  -H "Content-Type: application/json" \
+  -d '{"municipalityKey":"springfield","permitTypeKey":"residential_new","displayName":"Evergreen Terrace"}'
+```
+
+```bash
+curl http://localhost:4000/api/projects
+```
+
 ### Project layout
 
 ```

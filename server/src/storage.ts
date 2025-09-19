@@ -1,10 +1,19 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+export type ProjectRecord = {
+  project_id: string;
+  display_name: string | null;
+  municipality_key: string;
+  permit_type_key: string;
+  created_at: string;
+};
+
 export type Store = {
   documentTypes: any[];
   supplementalRequirements: any[];
   documents: any[];
+  projects: ProjectRecord[];
   projectValues: Record<string, Record<string, any>>;
 };
 
@@ -15,6 +24,7 @@ const createDefaultStore = (): Store => ({
   documentTypes: [],
   supplementalRequirements: [],
   documents: [],
+  projects: [],
   projectValues: {}
 });
 
@@ -40,6 +50,48 @@ const normalizeStore = (value: unknown): Store => {
 
   if (Array.isArray(value.documents)) {
     next.documents = value.documents;
+  }
+
+  if (Array.isArray(value.projects)) {
+    const projects: ProjectRecord[] = [];
+
+    for (const candidate of value.projects) {
+      if (!isRecord(candidate)) {
+        continue;
+      }
+
+      const projectId = candidate.project_id;
+      const municipalityKey = candidate.municipality_key;
+      const permitTypeKey = candidate.permit_type_key;
+      const createdAt = candidate.created_at;
+
+      if (
+        typeof projectId !== "string" ||
+        typeof municipalityKey !== "string" ||
+        typeof permitTypeKey !== "string" ||
+        typeof createdAt !== "string"
+      ) {
+        continue;
+      }
+
+      const displayNameRaw = candidate.display_name;
+      const displayName =
+        typeof displayNameRaw === "string"
+          ? displayNameRaw
+          : displayNameRaw === null
+            ? null
+            : null;
+
+      projects.push({
+        project_id: projectId,
+        display_name: displayName,
+        municipality_key: municipalityKey,
+        permit_type_key: permitTypeKey,
+        created_at: createdAt
+      });
+    }
+
+    next.projects = projects;
   }
 
   if (isRecord(value.projectValues)) {
