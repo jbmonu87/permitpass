@@ -36,6 +36,7 @@ const main = async () => {
   store.documentTypes = [];
   store.supplementalRequirements = [];
   store.documents = [];
+  store.projects = [];
   store.projectValues = {};
 
   const app = createApp();

@@ -9,7 +9,7 @@
     "start": "node dist/index.js",
     "lint": "eslint . --ext .ts",
     "typecheck": "tsc --noEmit",
-    "test": "tsx test/upload.test.ts"
+    "test": "tsx test/upload.test.ts && tsx test/projects.test.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
