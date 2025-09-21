@@ -12,7 +12,45 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
+
+      # Root dependencies if you keep anything at the repo root
+      - name: Install root deps (ok if none)
+        run: npm ci || true
+
+      # ---- SERVER ----
+      - name: Install server deps
+        run: npm ci
+        working-directory: server
+
+      - name: Server typecheck
+        run: npx tsc -p ./tsconfig.json --noEmit
+        working-directory: server
+
+      # If you have a lint script in server/package.json, this will run; otherwise it will no-op
+      - name: Server lint (optional)
+        run: npm run lint || true
+        working-directory: server
+
+      # ---- CLIENT ----
+      - name: Install client deps
+        run: npm ci
+        working-directory: client
+
+      # Vite build exercises the client bundle
+      - name: Client build
+        run: npm run build
+        working-directory: client
+
+      # If you have a lint script in client/package.json, run it as well (no-op if missing)
+      - name: Client lint (optional)
+        run: npm run lint || true
+        working-directory: client
+
+      # A tiny “I ran” marker so the job shows up as a check
       - run: echo "CI OK"
