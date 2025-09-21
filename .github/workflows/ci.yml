@@ -10,9 +10,67 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: echo "CI OK"
+          cache: npm
+
+      # ---------- Root (only if present) ----------
+      - name: Install root deps (if any)
+        if: ${{ hashFiles('package.json') != '' }}
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm i --legacy-peer-deps
+          fi
+
+      # ---------- Server ----------
+      - name: Install server deps
+        working-directory: server
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm i --legacy-peer-deps
+          fi
+
+      - name: Lint server (if script exists)
+        working-directory: server
+        run: npm run lint --if-present
+
+      - name: Build server (if script exists)
+        working-directory: server
+        run: npm run build --if-present
+
+      - name: Test server (if script exists)
+        working-directory: server
+        run: npm test --if-present
+
+      # ---------- Client ----------
+      - name: Install client deps
+        working-directory: client
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm i --legacy-peer-deps
+          fi
+
+      - name: Lint client (if script exists)
+        working-directory: client
+        run: npm run lint --if-present
+
+      - name: Build client (if script exists)
+        working-directory: client
+        run: npm run build --if-present
+
+      - name: Test client (if script exists)
+        working-directory: client
+        run: npm test --if-present
