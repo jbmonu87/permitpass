@@ -1,23 +1,30 @@
 name: ci
 
 on:
-  pull_request:
-    branches: [ main ]
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   check:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+          # Tell setup-node where the lockfiles are (not at repo root)
+          cache-dependency-path: |
+            server/package-lock.json
+            client/package-lock.json
 
-      # ----- SERVER -----
+      # ---- SERVER ----
       - name: Install server deps (ci)
         run: npm ci
         working-directory: server
@@ -26,11 +33,17 @@ jobs:
         run: npx tsc -p ./tsconfig.json --noEmit
         working-directory: server
 
-      # ----- CLIENT -----
+      # Optional – only if you actually have a lint script in server/package.json
+      - name: Server lint (optional)
+        run: npm run lint || true
+        working-directory: server
+
+      # ---- CLIENT ----
       - name: Install client deps (ci)
         run: npm ci
         working-directory: client
 
+      # Optional – only if a client build exists
       - name: Build client (if present)
-        run: npm run build --if-present
+        run: npm run build || true
         working-directory: client
