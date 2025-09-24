@@ -59,3 +59,4 @@ data/        # SQLite database and future CSV exports (gitignored)
 uploads/     # User uploads (gitignored)
 templates/   # Permit templates (gitignored)
 ```
+
