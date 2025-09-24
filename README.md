@@ -60,3 +60,4 @@ uploads/     # User uploads (gitignored)
 templates/   # Permit templates (gitignored)
 ```
 
+ 
