@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install (root, workspaces)
+        run: npm ci
+
+      # ---- Server ----
+      - name: Build server
+        run: npm run -w server build --if-present
+
+      # ---- Client ----
+      - name: Build client
+        run: npm run -w client build --if-present

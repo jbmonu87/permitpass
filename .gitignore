@@ -13,3 +13,4 @@ data/*
 templates/*
 !templates/.gitkeep
 .local/
+permitpass_support_bundle.txt

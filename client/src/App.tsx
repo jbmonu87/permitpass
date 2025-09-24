@@ -115,14 +115,13 @@ const ChecklistPreview = () => {
 };
 
 const StatusPage = () => {
-  const { data, isLoading, isError } = useQuery<{ status: string; timestamp: string }>([
-    "health"
-  ], async () => {
-    const response = await fetch("/api/health");
-    if (!response.ok) {
-      throw new Error("Failed to reach API");
+  const { data, isPending, isError } = useQuery<{ status: string; timestamp: string }>({
+    queryKey: ["health"],
+    queryFn: async () => {
+      const response = await fetch("/api/health");
+      if (!response.ok) throw new Error("Failed to reach API");
+      return (await response.json()) as { status: string; timestamp: string };
     }
-    return response.json();
   });
 
   return (
@@ -130,7 +129,7 @@ const StatusPage = () => {
       title="Service health"
       description="PermitPass API keeps status simple: Ready, Missing, or Needs attention."
     >
-      {isLoading ? (
+      {isPending ? (
         <p className="text-slate-300">Checking API health…</p>
       ) : isError ? (
         <p className="text-rose-300">API offline. We alert the team automatically.</p>
@@ -140,8 +139,10 @@ const StatusPage = () => {
             status={data && data.status.toLowerCase().includes("healthy") ? "ready" : "missing"}
           />
           <div>
-            <p className="font-medium text-white">{data?.status}</p>
-            <p className="text-xs text-slate-400">Updated {new Date(data!.timestamp).toLocaleString()}</p>
+            <p className="font-medium text-white">{data?.status ?? "Unknown"}</p>
+            <p className="text-xs text-slate-400">
+              Updated {data ? new Date(data.timestamp).toLocaleString() : ""}
+            </p>
           </div>
         </div>
       )}

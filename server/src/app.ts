@@ -5,6 +5,8 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { healthRouter } from "./routes/health.js";
 import { checklistRouter } from "./routes/checklist.js";
+import { uploadRouter } from "./routes/upload.js";
+import { projectsRouter } from "./routes/projects.js";
 import { appEnv } from "./config/env.js";
 import { db } from "./db/client.js";
 import { initializeSchema } from "./db/schema.js";
@@ -27,6 +29,8 @@ export const createApp = () => {
 
   app.use("/api/health", healthRouter);
   app.use("/api/checklist", checklistRouter);
+  app.use("/api/upload", uploadRouter);
+  app.use("/api/projects", projectsRouter);
 
   app.get("/api/admin/dump", (_req, res) => {
     res.json({
