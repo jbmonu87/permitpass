@@ -1,7 +1,7 @@
 const comparisonPattern =
   /^([\w$.[\]-]+)\s*(<=|>=|===|!==|==|!=|<|>)\s*(.+)$/;
 
-const pathTokenPattern = /([^\[\]]+)|\[(?:(-?\d+)|"([^"]+)"|'([^']+)')\]/g;
+const pathTokenPattern = /([^[\]]+)|\[(?:(-?\d+)|"([^"]+)"|'([^']+)')\]/g;
 
 const toNumber = (value: unknown): number | null => {
   if (typeof value === "number") {

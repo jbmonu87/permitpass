@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
